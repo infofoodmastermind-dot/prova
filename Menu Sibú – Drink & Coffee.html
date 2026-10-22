@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Menu Sibú – Drink & Coffee</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EEF2E3; --surface:#FFFFFF; --ink:#2B1B13; --muted:#6B5A4E;
+  --hero:#2B1B13; --hero-ink:#F6EFE2; --accent:#E8742A; --lime:#C6D45A; --line:#CFC6B4;
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#17110D; --surface:#241913; --ink:#F3EADB; --muted:#B5A595;
+    --hero:#0F0A07; --hero-ink:#F6EFE2; --line:#4A3A2E; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#17110D; --surface:#241913; --ink:#F3EADB; --muted:#B5A595;
+  --hero:#0F0A07; --hero-ink:#F6EFE2; --line:#4A3A2E; color-scheme:dark;
+}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 64px);scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.55 "DM Sans",system-ui,sans-serif}
+.hero{background:var(--hero);color:var(--hero-ink);padding:72px 24px 56px;position:relative;overflow:hidden}
+.hero h1{font:800 clamp(88px,26vw,260px)/.82 "Bricolage Grotesque",system-ui,sans-serif;letter-spacing:-.04em;margin:0;color:var(--lime)}
+.hero p{max-width:34ch;margin:28px 0 0;font-size:19px}
+.hero .sun{position:absolute;right:-70px;top:-70px;width:240px;height:240px;border-radius:50%;background:var(--accent)}
+.wrap{max-width:760px;margin:0 auto;padding:0 20px}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;gap:8px;overflow-x:auto;padding:12px 20px}
+nav a{white-space:nowrap;text-decoration:none;color:var(--ink);padding:8px 16px;border-radius:999px;border:1px solid var(--line);font-weight:500;font-size:15px}
+nav a:hover,nav a:focus-visible{background:var(--accent);border-color:var(--accent);color:#fff;outline:none}
+section{padding:48px 0 8px}
+h2{font:800 clamp(34px,7vw,52px)/1 "Bricolage Grotesque",system-ui,sans-serif;letter-spacing:-.02em;margin:0 0 6px}
+.note{color:var(--muted);margin:0 0 20px;font-size:15px}
+ul{list-style:none;margin:0;padding:0}
+li{padding:14px 0}
+.row{display:flex;align-items:baseline;gap:10px}
+.name{font-weight:500;font-size:18px}
+.dots{flex:1;border-bottom:2px dotted var(--line);transform:translateY(-4px);min-width:16px}
+.price{font:800 18px "Bricolage Grotesque",system-ui,sans-serif;color:var(--accent)}
+.desc{margin:2px 0 0;color:var(--muted);font-size:15px;max-width:52ch}
+footer{margin-top:64px;background:var(--hero);color:var(--hero-ink);padding:40px 24px 48px;text-align:center}
+footer strong{font:800 28px "Bricolage Grotesque",system-ui,sans-serif;color:var(--lime)}
+footer p{margin:8px 0 0;color:var(--hero-ink);opacity:.8;font-size:15px}
+a:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="sun" aria-hidden="true"></div>
+  <h1>Sibú</h1>
+  <p>Drink &amp; coffee. Scegli, ordina al banco e goditi il tuo giro.</p>
+</header>
+
+<nav aria-label="Categorie del menu"><div class="wrap" id="nav"></div></nav>
+
+<main class="wrap" id="menu"></main>
+
+<footer>
+  <strong>Sibú</strong>
+  <p>Drink &amp; coffee</p>
+</footer>
+
+<script>
+/* Modifica qui voci e prezzi del menu: il resto della pagina si aggiorna da solo. */
+const MENU = [
+  { id:"caffe", titolo:"Caffè", nota:"", voci:[
+    ["Espresso","Intenso e cremoso","1,20"],
+    ["Cappuccino","Espresso, latte caldo e schiuma","1,60"],
+    ["Latte macchiato","Latte caldo con un tocco di caffè","2,00"],
+    ["Caffè shakerato","Ghiacciato e spumoso","2,50"]
+  ]},
+  { id:"freddi", titolo:"Drink freddi", nota:"", voci:[
+    ["Iced coffee","Caffè freddo con ghiaccio","3,00"],
+    ["Iced latte","Espresso, latte freddo e ghiaccio","3,50"],
+    ["Limonata fresca","Limone, zucchero di canna e menta","3,00"],
+    ["Tè freddo","Pesca o limone","2,50"]
+  ]},
+  { id:"frullati", titolo:"Frullati e succhi", nota:"", voci:[
+    ["Frullato di frutta","Frutta di stagione e yogurt","4,00"],
+    ["Succo fresco","Arancia, mela o ananas","3,50"],
+    ["Smoothie tropicale","Mango, ananas e cocco","4,50"]
+  ]},
+  { id:"te", titolo:"Tè e tisane", nota:"", voci:[
+    ["Tè nero","","2,00"],
+    ["Tè verde","","2,00"],
+    ["Tisana","Camomilla, menta o frutti rossi","2,00"]
+  ]},
+  { id:"dolci", titolo:"Da mangiare", nota:"", voci:[
+    ["Cornetto","Vuoto, crema o cioccolato","1,30"],
+    ["Toast","Prosciutto e formaggio","3,50"],
+    ["Dolce del giorno","Chiedi al banco","3,00"]
+  ]}
+];
+
+const nav = document.getElementById("nav");
+const menu = document.getElementById("menu");
+MENU.forEach(c => {
+  const a = document.createElement("a");
+  a.href = "#" + c.id; a.textContent = c.titolo;
+  nav.appendChild(a);
+
+  const s = document.createElement("section");
+  s.id = c.id;
+  let html = "<h2>" + c.titolo + "</h2>";
+  if (c.nota) html += '<p class="note">' + c.nota + "</p>";
+  html += "<ul>" + c.voci.map(v =>
+    '<li><div class="row"><span class="name">' + v[0] + '</span><span class="dots" aria-hidden="true"></span><span class="price">€ ' + v[2] + "</span></div>" +
+    (v[1] ? '<p class="desc">' + v[1] + "</p>" : "") + "</li>").join("") + "</ul>";
+  s.innerHTML = html;
+  menu.appendChild(s);
+});
+</script>
+</body>
+</html>
